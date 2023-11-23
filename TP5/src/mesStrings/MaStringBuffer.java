@@ -12,10 +12,9 @@ public class MaStringBuffer {
 
     // Constructeur pour créer un MaStringBuffer vide avec une capacité par défaut de 16 caractères
     public MaStringBuffer() {
-        this(16);
+        lesCaracteres = new char[16];
     }
 
-    // Constructeur pour créer un MaStringBuffer à partir d'une MaString avec une capacité de ms.length() + 16 caractères
     public MaStringBuffer(MaString ms) {
         lesCaracteres = new char[ms.length() + 16];
         for (int i = 0; i < ms.length(); i++) {
@@ -33,12 +32,10 @@ public class MaStringBuffer {
         return n;
     }
 
-    // Méthode pour retourner la capacité du tampon
     public int capacity() {
         return lesCaracteres.length;
     }
 
-    // Méthode pour assurer une capacité minimum
     public void ensureCapacity(int capMin) {
         if (capMin > lesCaracteres.length) {
             char[] newChars = new char[Math.max(capMin, lesCaracteres.length * 2)];
@@ -49,7 +46,6 @@ public class MaStringBuffer {
         }
     }
 
-    // Méthode pour concaténer les caractères de MaString ms
     public MaStringBuffer append(MaString ms) {
         ensureCapacity(n + ms.length());
         for (int i = 0; i < ms.length(); i++) {
@@ -60,17 +56,18 @@ public class MaStringBuffer {
 
     // Méthode pour remplacer les caractères d'indices d à f par les caractères de MaString ms
     public MaStringBuffer replace(int d, int f, MaString ms) {
-        if (d < 0 || f > n || d > f) {
+        if (d < 0 || d > f) {
             throw new IllegalArgumentException("Indices invalides");
         }
 
         int replacementLength = ms.length();
         int shift = replacementLength - (f - d);
 
-        ensureCapacity(n + shift);
+        ensureCapacity(n + shift); // adapter la taille du lescaractère selon la longeur de (n+shift)
 
         // Décaler les caractères après l'indice f
         for (int i = n - 1; i >= f; i--) {
+        	System.out.println(lesCaracteres[i]);
             lesCaracteres[i + shift] = lesCaracteres[i];
         }
 
@@ -79,7 +76,7 @@ public class MaStringBuffer {
             lesCaracteres[d + i] = ms.charAt(i);
         }
 
-        n += shift;
+        n += shift; // update de la taille des elements effectifs
 
         return this;
     }
@@ -126,12 +123,19 @@ public class MaStringBuffer {
     }
     
 	public static void main(String[] args) {
-		char [] tab = {'h','e','l','l','o'};
-		MaStringBuffer c = new MaStringBuffer();
-		
-		
-		
 
+		char [] tab = {'M','I','A','M','I'};
+		MaString ms = new MaString(tab,0,tab.length);
 		
+		char [] tab2 = {'B','o','n','j','o','u','r'};
+		MaString ms2 = new MaString(tab2,0,tab2.length);
+		
+		ms.afficher();
+		
+		MaStringBuffer mB = new MaStringBuffer(ms2);
+		int d=1, f=2;
+		
+		System.out.println(mB.replace(d, f, ms));
+
 	}
 }
